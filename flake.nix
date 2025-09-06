@@ -17,7 +17,7 @@
 
     apps.default = {
       type = "app";
-      program = "${self.packages.${system}.default}/bin/vanando";
+      program = "${self.packages.${system}.default}/bin/test";
     };
   }) // {
     nixosModules.default = {config, lib, pkgs, ...}: {
@@ -36,7 +36,7 @@
           wantedBy = ["multi-user.target"];
           after = ["network.target"];
           serviceConfig = {
-            ExecStart = "${self.packages.${pkgs.system}.default}/bin/vanando";
+            ExecStart = "${self.packages.${pkgs.system}.default}/bin/test";
             Restart = "always";
             Type = "simple";
             DynamicUser = "yes";
