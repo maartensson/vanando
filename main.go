@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"io"
 	"net/http"
+	"os"
 	"regexp"
 )
 
@@ -120,7 +121,7 @@ func main() {
 		tpl.Execute(w, images)
 
 	})
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":"+os.Getenv("PORT"), nil)
 }
 
 func uniqueStrings(input []string) []string {
