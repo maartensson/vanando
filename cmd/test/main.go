@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"path"
 	"regexp"
 	"strings"
 )
@@ -63,11 +64,10 @@ func getVans() ([]Item, error) {
 		if err != nil {
 			log.Fatal(err)
 		}
-
 		items = append(items, Item{
 			TitleH5: m[1],
 			TitleH2: m[2],
-			Link:    fmt.Sprintf("/van%s", u.Path),
+			Link:    fmt.Sprintf("/van/%s", path.Base(path.Clean(u.Path))),
 			Image:   m[4],
 		})
 	}
@@ -153,7 +153,7 @@ func main() {
 			log.Fatal(err)
 		}
 	})
-	mux.HandleFunc("GET /van/{id}/", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("GET /van/{id}", func(w http.ResponseWriter, r *http.Request) {
 		id := r.PathValue("id")
 		resp, err := http.Get(fmt.Sprintf("https://www.vannado.com/%s", id)) //"")
 		if err != nil {
