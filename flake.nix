@@ -9,7 +9,7 @@
   outputs = {self, nixpkgs, flake-utils, ...}:
   flake-utils.lib.eachDefaultSystem (system: {
     packages.default = nixpkgs.legacyPackages.${system}.buildGoModule {
-      pname = "serverinfo";
+      pname = "vanando";
       version = "0.0.1";
       src = ./.;
       vendorHash = null;
@@ -21,7 +21,7 @@
     };
   }) // {
     nixosModules.default = {config, lib, pkgs, ...}: {
-      options.services.serverinfo = {
+      options.services.vanando = {
         enable = lib.mkEnableOption "Enable vanando image webservice";
         port = lib.mkOption {
           type = lib.types.port;
@@ -30,7 +30,7 @@
         };
       };
 
-      config = lib.mkIf config.services.serverinfo.enable {
+      config = lib.mkIf config.services.vandndo.enable {
         systemd.services.vanando = {
           description = "Vanando image webservice";
           wantedBy = ["multi-user.target"];
