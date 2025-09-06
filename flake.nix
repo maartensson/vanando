@@ -30,7 +30,7 @@
         };
       };
 
-      config = lib.mkIf config.services.vandndo.enable {
+      config = lib.mkIf config.services.vanando.enable {
         systemd.services.vanando = {
           description = "Vanando image webservice";
           wantedBy = ["multi-user.target"];
