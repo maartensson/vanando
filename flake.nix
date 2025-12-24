@@ -20,7 +20,11 @@
       program = "${self.packages.${system}.default}/bin/test";
     };
   }) // {
-    nixosModules.default = {config, lib, pkgs, ...}: {
+    nixosModules.default = {config, lib, pkgs, ...}: let 
+      system = pkgs.stdenv.hostPlatform.system;
+      vanando = self.packages.${system}.default;
+      cfg = config.services.vanando;
+    in {
       options.services.vanando = {
         enable = lib.mkEnableOption "Enable vanando image webservice";
         port = lib.mkOption {
@@ -30,18 +34,18 @@
         };
       };
 
-      config = lib.mkIf config.services.vanando.enable {
+      config = lib.mkIf cfg.enable {
         systemd.services.vanando = {
           description = "Vanando image webservice";
           wantedBy = ["multi-user.target"];
           after = ["network.target"];
           serviceConfig = {
-            ExecStart = "${self.packages.${pkgs.system}.default}/bin/test";
+            ExecStart = "${vanando}/bin/test";
             Restart = "always";
             Type = "simple";
             DynamicUser = "yes";
             Environment = [
-              "PORT=${toString config.services.vanando.port}"
+              "PORT=${toString cfg.port}"
             ];
           };
         };
