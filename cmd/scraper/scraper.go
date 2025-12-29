@@ -10,6 +10,7 @@ import (
 	"net/url"
 	"os"
 	"path"
+	"path/filepath"
 	"regexp"
 	"time"
 
@@ -32,7 +33,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	f, err := os.Create(stateDir)
+	f, err := os.Create(filepath.Join(stateDir, "items.json"))
 	if err != nil {
 		log.Error("failed to open state file", "error", err)
 		os.Exit(1)

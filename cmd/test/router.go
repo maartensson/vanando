@@ -19,7 +19,7 @@ func router(stateDir string) http.Handler {
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /{$}", func(w http.ResponseWriter, r *http.Request) {
-		f, err := os.Open(filepath.Join(stateDir, "last_scrape.json"))
+		f, err := os.Open(filepath.Join(stateDir, "items.json"))
 		if err != nil {
 			http.Error(w, "missing data", http.StatusInternalServerError)
 			return
