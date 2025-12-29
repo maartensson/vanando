@@ -168,7 +168,14 @@
               ];
               SystemCallErrorNumber="EPERM";
               SystemCallArchitectures = "native";
-              SystemCallLog = true;
+              SystemCallLog = [ 
+                "@system-service"
+                "~@reboot"
+                "~@raw-io"
+                "~@mount"
+                "~@swap"
+                "~@module"
+              ];
 
               # Security
               NoNewPrivileges = true;
