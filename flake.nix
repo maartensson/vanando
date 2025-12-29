@@ -62,11 +62,35 @@
               ExecStart = "${vanando}/bin/test";
               Type = "simple";
               PrivateNetwork = true;
+              StateDirectory = "vanando";
               User = "vanando";
               Group = "vanando";
               Environment = [
                 "PORT=${toString cfg.port}"
               ];
+            };
+          };
+
+          systemd.timers.vanando-scraper = {
+            description = "Runs the scraper every hour";
+            wantedBy = [ "timers.target" ];
+
+            timerConfig = {
+              OnCalendar = "Mon 18:35";
+              Persistent = true;
+              Unit = "vanando-scraper.service";
+            };
+          };
+
+          services.vanando-scraper = {
+            description = "Vanando image scraper";
+            serviceConfig = {
+              ExecStart = "${vanando}/bin/scraper";
+              Type = "oneshot";
+              User = "vanando";
+              Group = "vanando";
+              StateDirectory = "vanando";
+              RemainAfterExit = false;
             };
           };
         };
