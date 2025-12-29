@@ -12,7 +12,7 @@
       pname = "vanando";
       version = "0.0.1";
       src = ./.;
-      vendorHash = null;
+      vendorHash = "";
     };
 
     apps.default = {
@@ -35,18 +35,39 @@
       };
 
       config = lib.mkIf cfg.enable {
-        systemd.services.vanando = {
-          description = "Vanando image webservice";
-          wantedBy = ["multi-user.target"];
-          after = ["network.target"];
-          serviceConfig = {
-            ExecStart = "${vanando}/bin/test";
-            Restart = "always";
-            Type = "simple";
-            DynamicUser = "yes";
-            Environment = [
-              "PORT=${toString cfg.port}"
-            ];
+        users = {
+          groups.vanando = {};
+          users.vanando = {
+            isSystemUser = true;
+            group = "vanando";
+          };
+        };
+        systemd = {
+          sockets.vanando= {
+            after = [ "network.target" ];
+            wantedBy = [ "sockets.target" ];
+            listenStreams = [ "0.0.0.0:80" ];
+            socketConfig = {
+              Accept = false;
+              SocketUser = "vanando";
+              SocketGroup = "vanando";
+              ReusePort = true;
+            };
+          };
+
+          services.vanando = {
+            description = "Vanando image webservice";
+            requires = [ "vanando.socket" ];
+            serviceConfig = {
+              ExecStart = "${vanando}/bin/test";
+              Type = "simple";
+              PrivateNetwork = true;
+              User = "vanando";
+              Group = "vanando";
+              Environment = [
+                "PORT=${toString cfg.port}"
+              ];
+            };
           };
         };
       };
