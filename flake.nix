@@ -12,7 +12,7 @@
       pname = "vanando";
       version = "0.0.1";
       src = ./.;
-      vendorHash = "sha256-XxxoAoHKQLChs09BE05AEztzzhuQhPSKu7mCD3zsu34=";
+      vendorHash = "sha256-+03fzyPp3vaBZLk43v9QwmpXxHY4HlwtGXk7dATk8Zs=";
     };
 
     apps.default = {
