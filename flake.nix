@@ -71,7 +71,7 @@
             };
           };
 
-          systemd.timers.vanando-scraper = {
+          timers.vanando-scraper = {
             description = "Runs the scraper every hour";
             wantedBy = [ "timers.target" ];
 
