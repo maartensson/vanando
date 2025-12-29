@@ -46,7 +46,7 @@
           sockets.vanando= {
             after = [ "network.target" ];
             wantedBy = [ "sockets.target" ];
-            listenStreams = [ "0.0.0.0:80" ];
+            listenStreams = [ "0.0.0.0:${toString cfg.port}" ];
             socketConfig = {
               Accept = false;
               SocketUser = "vanando";
