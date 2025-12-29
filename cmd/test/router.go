@@ -1,21 +1,34 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"io"
 	"net/http"
+	"os"
+	"path/filepath"
 	"regexp"
 	"strings"
 )
 
-func router(items []Item) http.Handler {
+func router(stateDir string) http.Handler {
 
 	tmpl := template.Must(template.New("grid").Parse(tpl))
 	tmpl2 := template.Must(template.New("grid").Parse(tpl2))
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /{$}", func(w http.ResponseWriter, r *http.Request) {
+		f, err := os.Open(filepath.Join(stateDir, "last_scrape.json"))
+		if err != nil {
+			http.Error(w, "missing data", http.StatusInternalServerError)
+			return
+		}
+		var items []Item
+		if err := json.NewDecoder(f).Decode(&items); err != nil {
+			http.Error(w, "invalid data on disk", http.StatusInternalServerError)
+			return
+		}
 		tmpl.Execute(w, items)
 	})
 
@@ -31,7 +44,7 @@ func router(items []Item) http.Handler {
 		}
 		tmpl2.Execute(w, Content{
 			Title:  getTitle(string(body)),
-			Images: uniqueStrings(ExtractGalleryImages(string(body))),
+			Images: uniqueStrings(extractGalleryImages(string(body))),
 		})
 	})
 
@@ -70,4 +83,33 @@ func uniqueStrings(input []string) []Img {
 	}
 
 	return result
+}
+
+func extractGalleryImages(html string) []string {
+	var urls []string
+
+	// Match each <div class="fusion-gallery-image"> block
+	divRe := regexp.MustCompile(`(?s)<div class="fusion-gallery-image">(.*?)</div>\s*</div>`)
+	divMatches := divRe.FindAllStringSubmatch(html, -1)
+
+	// Regexes for data-orig-src and background-image
+	origRe := regexp.MustCompile(`data-orig-src="(https?:\/\/www\.vannado\.com\/wp-content\/uploads\/[^\s"']+\.jpg)"`)
+	bgRe := regexp.MustCompile(`background-image:\s*url\(&quot;(https?:\/\/www\.vannado\.com\/wp-content\/uploads\/[^\s"']+\.jpg)&quot;\)`)
+
+	for _, div := range divMatches {
+		content := div[1]
+		var img string
+
+		if match := origRe.FindStringSubmatch(content); match != nil {
+			img = match[1] // prefer data-orig-src
+		} else if match := bgRe.FindStringSubmatch(content); match != nil {
+			img = match[1] // fallback to background-image
+		}
+
+		if img != "" {
+			urls = append(urls, img)
+		}
+	}
+
+	return urls
 }

@@ -45,10 +45,10 @@ func main() {
 }
 
 type Item struct {
-	TitleH5 string
-	TitleH2 string
-	Link    string
-	Image   string
+	TitleH5 string `json:"title_h_5"`
+	TitleH2 string `json:"title_h_2"`
+	Link    string `json:"link"`
+	Image   string `json:"image"`
 }
 
 var re = regexp.MustCompile(`(?s)<h5[^>]*>.*?<strong>([^<]+)</strong>.*?</h5>.*?<h2[^>]*>.*?<span[^>]*>([^<]+)</span>.*?</h2>.*?<a[^>]+href="([^"]+)"[^>]*>.*?<img[^>]+src="(https://www\.vannado\.com/wp-content/uploads/[^"]+\.jpg)"[^>]*>`)
