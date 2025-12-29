@@ -61,13 +61,60 @@
             serviceConfig = {
               ExecStart = "${vanando}/bin/test";
               Type = "simple";
-              PrivateNetwork = true;
-              StateDirectory = "vanando";
               User = "vanando";
               Group = "vanando";
               Environment = [
                 "PORT=${toString cfg.port}"
               ];
+
+              # Sandboxing
+              ProtectSystem = "strict";
+              ProtectHome = true;
+              StateDirectory = "vanando";
+              PrivateTmp = true;
+              PrivateDevices = true;
+              PrivateNetwork = true;
+              ProtectHostname = true;
+              ProtectClock = true;
+              ProtectKernelTunables = true;
+              ProtectKernelModules = true;
+              ProtectKernelLogs = true;
+              ProtectControlGroups = true;
+              RestrictAddressFamilies = [ "AF_INET" ];
+              RestrictNamespaces = true;
+              LockPersonality = true;
+              MemoryDenyWriteExecute = true;
+              RestrictRealtime = true;
+              RestrictSUIDSGID = true;
+              RemoveIPC = true;
+              PrivateMounts = true;
+              SystemCallFilter = [ 
+                "@system-service"
+                "~@reboot"
+                "~@raw-io"
+                "~@mount"
+                "~@swap"
+                "~@module"
+              ];
+              SystemCallErrorNumber="EPERM";
+              SystemCallArchitectures = "native";
+              SystemCallLog = true;
+
+              # Security
+              NoNewPrivileges = true;
+
+              # Capabilities 
+              CapabilityBoundingSet = [ "" ];
+
+              # Paths 
+              ProtectProc = "invisible";
+              ProcSubset = "pid";
+
+              # Process Properties
+              UMask = "0077";
+
+              # Device Access
+              DevicePolicy = "closed";
             };
           };
 
@@ -89,8 +136,55 @@
               Type = "oneshot";
               User = "vanando";
               Group = "vanando";
-              StateDirectory = "vanando";
               RemainAfterExit = false;
+
+              # Sandboxing
+              ProtectSystem = "strict";
+              ProtectHome = true;
+              StateDirectory = "vanando";
+              PrivateTmp = true;
+              PrivateDevices = true;
+              ProtectHostname = true;
+              ProtectClock = true;
+              ProtectKernelTunables = true;
+              ProtectKernelModules = true;
+              ProtectKernelLogs = true;
+              ProtectControlGroups = true;
+              RestrictAddressFamilies = [ "AF_INET" ];
+              RestrictNamespaces = true;
+              LockPersonality = true;
+              MemoryDenyWriteExecute = true;
+              RestrictRealtime = true;
+              RestrictSUIDSGID = true;
+              RemoveIPC = true;
+              PrivateMounts = true;
+              SystemCallFilter = [ 
+                "@system-service"
+                "~@reboot"
+                "~@raw-io"
+                "~@mount"
+                "~@swap"
+                "~@module"
+              ];
+              SystemCallErrorNumber="EPERM";
+              SystemCallArchitectures = "native";
+              SystemCallLog = true;
+
+              # Security
+              NoNewPrivileges = true;
+
+              # Capabilities 
+              CapabilityBoundingSet = [ "" ];
+
+              # Paths 
+              ProtectProc = "invisible";
+              ProcSubset = "pid";
+
+              # Process Properties
+              UMask = "0077";
+
+              # Device Access
+              DevicePolicy = "closed";
             };
           };
         };

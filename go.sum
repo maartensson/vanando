@@ -2,3 +2,5 @@ github.com/coreos/go-systemd/v22 v22.6.0 h1:aGVa/v8B7hpb0TKl0MWoAavPDmHvobFe5R5z
 github.com/coreos/go-systemd/v22 v22.6.0/go.mod h1:iG+pp635Fo7ZmV/j14KUcmEyWF+0X7Lua8rrTWzYgWU=
 github.com/maartensson/ctxsrv v0.0.6 h1:RIdtJK2a2yA9g3WpxgAx3E5H9AIERIlIEFB+7R2DGus=
 github.com/maartensson/ctxsrv v0.0.6/go.mod h1:xYI1kGY21RJzizHtfRNX4MpVnwO5btzidIGkwVKGyW0=
+github.com/maartensson/ctxsrv v0.0.7 h1:NkOy9Yxgl6r0N7FlTDRlp5pIITf1Rb3qzbs6sq1EnV8=
+github.com/maartensson/ctxsrv v0.0.7/go.mod h1:xYI1kGY21RJzizHtfRNX4MpVnwO5btzidIGkwVKGyW0=

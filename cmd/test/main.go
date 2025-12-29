@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"log/slog"
-	"net"
 	"os"
 	"time"
 
@@ -22,13 +21,7 @@ type Item struct {
 func main() {
 	log := slog.New(jlog.New(nil))
 
-	port, err := getenv.NetworkPort()
-	if err != nil {
-		log.Error("failed to get valid port")
-		os.Exit(1)
-	}
-
-	ln, err := server.ActivationListener(port, false)
+	ln, err := server.ActivationListener()
 	if err != nil {
 		log.Error("failed to get activation socket")
 		os.Exit(1)
@@ -40,15 +33,12 @@ func main() {
 		os.Exit(1)
 	}
 
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-
 	if err := server.HTTP(
-		ctx, cancel, router(stateDir),
-		log, ln, time.Hour,
-		func(ctx context.Context, c net.Conn) context.Context {
-			return ctx
-		},
+		context.Background(),
+		log,
+		ln,
+		router(stateDir),
+		server.WithShutdownOnIdle(time.Hour),
 	); err != nil {
 		log.Error("HTTP server failed", "error", err)
 	}
